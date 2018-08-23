@@ -258,4 +258,163 @@ describe('server', () => {
       }
     })
   })
+
+  // ============================================================================
+  // server.calculateExitCode
+  // ============================================================================
+  describe('calculateExitCode', () => {
+    const DEFAULT_EXIT_CODE = -1
+    const EXIT_CODE_SUCCESS = 0
+    const DEFAULT_OPTIONS = {
+      failOnEmptyTestSuite: false,
+      failOnFailingTestSuite: true
+    }
+
+    describe('no tests, with error', () => {
+      const results = {
+        success: 0,
+        failed: 0,
+        error: true,
+        exitCode: DEFAULT_EXIT_CODE
+      }
+      it('shall be unmodified if failOnEmptyTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall pass if failOnEmptyTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: false
+        })
+        expect(res).to.be.equal(EXIT_CODE_SUCCESS)
+      })
+      it('shall pass if failOnFailingTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnFailingTestSuite: true
+        })
+        expect(res).to.be.equal(EXIT_CODE_SUCCESS)
+      })
+      it('shall pass if failOnFailingTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnFailingTestSuite: false
+        })
+        expect(res).to.be.equal(EXIT_CODE_SUCCESS)
+      })
+    })
+    describe('no tests, no errors', () => {
+      const results = {
+        success: 0,
+        failed: 0,
+        error: false,
+        exitCode: DEFAULT_EXIT_CODE
+      }
+      it('shall pass if failOnEmptyTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: false
+        })
+        expect(res).to.be.equal(EXIT_CODE_SUCCESS)
+      })
+      it('shall be unmodifed if failOnEmptyTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall pass if failOnFailingTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true,
+          failOnFailingTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall be unmodifed if failOnFailingTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true,
+          failOnFailingTestSuite: false
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+    })
+    describe('all test passed, no errors', () => {
+      const results = {
+        success: 10,
+        failed: 0,
+        error: false,
+        exitCode: DEFAULT_EXIT_CODE
+      }
+      it('shall be unmodifed if failOnEmptyTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall be unmodifed if failOnEmptyTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall be unmodifed if failOnFailingTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnFailingTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall be unmodifed if failOnFailingTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnFailingTestSuite: false
+        })
+        expect(res).to.be.equal(EXIT_CODE_SUCCESS)
+      })
+    })
+    describe('all test passed, with error', () => {
+      const results = {
+        success: 10,
+        failed: 5,
+        error: false,
+        exitCode: DEFAULT_EXIT_CODE
+      }
+      it('shall be unmodified if failOnEmptyTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall be unmodified if failOnEmptyTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnEmptyTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall be unmodified if failOnFailingTestSuite is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnFailingTestSuite: true
+        })
+        expect(res).to.be.equal(DEFAULT_EXIT_CODE)
+      })
+      it('shall pass if failOnFailingTestSuite not is set', () => {
+        const res = server.calculateExitCode(results, {
+          ...DEFAULT_OPTIONS,
+          failOnFailingTestSuite: false
+        })
+        expect(res).to.be.equal(EXIT_CODE_SUCCESS)
+      })
+    })
+  })
 })
